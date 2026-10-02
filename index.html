@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ULTIMEZ Productivity Dashboard — Phase 1 + Phase 2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0} :root{--p:#1717b8;--p2:#3030df;--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#718096;--border:#e6eaf0;--green:#18a874;--orange:#f39c12;--red:#e45757;--shadow:0 8px 30px rgba(26,36,80,.08)}
+body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.hidden{display:none!important}
+#authPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#10108d,#3434df)}.auth-card{width:100%;max-width:440px;background:#fff;border-radius:22px;padding:34px;box-shadow:0 20px 60px rgba(0,0,0,.2)}.logo{text-align:center;color:var(--p);font-size:32px;font-weight:900;letter-spacing:2px}.auth-sub{text-align:center;color:var(--muted);margin:8px 0 28px}.tabs{display:flex;background:#f1f3f8;border-radius:10px;padding:4px;margin-bottom:22px}.tabs button{width:50%;padding:10px;border-radius:8px;background:transparent;color:var(--muted)}.tabs button.active{background:#fff;color:var(--p);font-weight:700;box-shadow:0 2px 8px #ddd}.field{margin-bottom:15px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1px solid var(--border);border-radius:9px;outline:none;background:#fff}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--p2);box-shadow:0 0 0 3px rgba(48,48,223,.1)}.primary,.btn{padding:11px 15px;border-radius:9px;background:var(--p);color:#fff;font-weight:700}.primary{width:100%}.primary:hover,.btn:hover{background:var(--p2)}.demo{text-align:center;color:var(--muted);font-size:12px;margin-top:13px}
+#app{display:none;min-height:100vh}.sidebar{position:fixed;left:0;top:0;bottom:0;width:245px;background:#10108d;color:#fff;padding:25px 15px;z-index:20}.side-logo{font-size:25px;font-weight:900;letter-spacing:2px;padding:0 15px 30px}.nav button{display:flex;align-items:center;gap:12px;width:100%;padding:12px 15px;margin:3px 0;border-radius:10px;background:transparent;color:#dfe1ff;text-align:left}.nav button:hover,.nav button.active{background:rgba(255,255,255,.14);color:#fff}.userbox{position:absolute;left:15px;right:15px;bottom:20px;border-top:1px solid rgba(255,255,255,.15);padding:17px 10px}.avatar{width:38px;height:38px;border-radius:50%;background:#fff;color:var(--p);display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-right:8px}.userbox small{color:#cbd0ff}.main{margin-left:245px;min-height:100vh}.topbar{height:72px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:10}.menu{display:none;font-size:25px;background:none}.content{padding:28px;max-width:1450px;margin:auto}.page-title{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:22px}.page-title h1{font-size:27px}.page-title p{color:var(--muted);margin-top:5px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:22px}.stat,.panel,.note-card,.board-col{background:#fff;border:1px solid var(--border);border-radius:15px;box-shadow:var(--shadow)}.stat{padding:20px}.stat .icon{font-size:25px;margin-bottom:12px}.stat h2{font-size:28px;margin-bottom:5px}.stat p{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:2fr 1fr;gap:20px}.panel{padding:20px;margin-bottom:20px}.panel h3{margin-bottom:16px}.task{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--border)}.task:last-child{border-bottom:0}.check{width:20px;height:20px;border:2px solid #b8c0cf;border-radius:6px;display:flex;align-items:center;justify-content:center;flex:none}.check.done{background:var(--green);border-color:var(--green);color:white}.task-info{flex:1;min-width:0}.task-info strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.task-info span{font-size:12px;color:var(--muted)}.badge{padding:5px 9px;border-radius:20px;font-size:11px;font-weight:700}.high{background:#ffe7e7;color:#c63838}.medium{background:#fff1d7;color:#a86900}.low{background:#e4f8ef;color:#087a51}.progress{height:8px;background:#edf0f5;border-radius:20px;overflow:hidden;margin-top:9px}.progress i{display:block;height:100%;background:var(--p2);border-radius:20px}.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.quick button{padding:14px;border:1px solid var(--border);border-radius:10px;background:#fff;text-align:left}.quick button:hover{border-color:var(--p2)}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}.toolbar input,.toolbar select{padding:10px;border:1px solid var(--border);border-radius:8px;background:#fff}.btn.secondary{background:#eef0ff;color:var(--p)}.btn.danger{background:#ffe7e7;color:#c63838}.task-actions{display:flex;gap:6px}.iconbtn{background:#f4f5f8;border-radius:7px;padding:7px}.empty{text-align:center;color:var(--muted);padding:25px}.modal{position:fixed;inset:0;background:rgba(8,12,30,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}.modal-card{background:#fff;width:100%;max-width:650px;border-radius:16px;padding:24px;max-height:92vh;overflow:auto}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.close{background:#f0f2f5;border-radius:50%;width:32px;height:32px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid .full{grid-column:1/-1}.toast{position:fixed;right:20px;bottom:20px;background:#172033;color:#fff;padding:13px 18px;border-radius:10px;z-index:100;box-shadow:var(--shadow)}
+.calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.cal-head{text-align:center;color:var(--muted);font-size:12px;padding:7px}.day{min-height:92px;border:1px solid var(--border);border-radius:8px;padding:7px;font-size:12px;background:#fff}.day.today{border:2px solid var(--p2)}.day.other{opacity:.4}.day .event{display:block;margin-top:7px;background:#e9e9ff;color:var(--p);border-radius:5px;padding:4px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.day .event.rem{background:#fff1d7;color:#9a6200}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.board-col{padding:15px;min-height:350px;background:#f9faff}.board-col h3{font-size:14px;margin-bottom:12px}.dropzone{min-height:290px}.drag-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;box-shadow:0 3px 12px rgba(26,36,80,.05);cursor:grab}.drag-card:active{cursor:grabbing}.drag-card strong{display:block;margin-bottom:7px}.drag-card small{color:var(--muted)}.drag-card .badge{display:inline-block;margin-top:8px}.dropzone.over{background:#eef0ff;border-radius:10px}
+.notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.note-card{padding:17px}.note-card h3{margin-bottom:8px}.note-card p{white-space:pre-wrap;color:#4a5568;font-size:14px;min-height:70px}.note-meta{font-size:11px;color:var(--muted);margin-top:12px}.reminder-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:13px 0;border-bottom:1px solid var(--border)}.reminder-item:last-child{border-bottom:0}.reminder-item strong{display:block}.reminder-item small{color:var(--muted)}.status{padding:4px 8px;border-radius:15px;font-size:10px;font-weight:700}.status.on{background:#e4f8ef;color:#087a51}.status.off{background:#ffe7e7;color:#c63838}.integration{display:flex;gap:10px;flex-wrap:wrap}.hint{font-size:12px;color:var(--muted);margin-top:10px}
+@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.notes-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:800px){.sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.menu{display:block}.board{grid-template-columns:1fr}.notes-grid{grid-template-columns:1fr}}@media(max-width:560px){.content{padding:17px}.topbar{padding:0 17px}.cards{grid-template-columns:1fr 1fr;gap:10px}.stat{padding:14px}.stat h2{font-size:23px}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.calendar{gap:3px}.day{min-height:65px;padding:4px}.quick{grid-template-columns:1fr}}
+
+:root{
+  --p:#3b4ef5;
+  --p2:#5d73ff;
+  --bg:#f3f6ff;
+  --panel:#ffffff;
+  --text:#1b2333;
+  --muted:#64748b;
+  --border:#e5ebf7;
+  --green:#1bb77c;
+  --orange:#ffae42;
+  --red:#ef5b67;
+  --shadow:0 18px 45px rgba(23,33,94,.08);
+  --shadow-soft:0 10px 25px rgba(76,104,255,.12);
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:radial-gradient(circle at top left,#eef4ff 0%,#f5f7ff 32%,#f4f8fb 100%);
+  color:var(--text);
+}
+button{transition:all .2s ease}
+button:hover{transform:translateY(-1px)}
+#authPage{
+  background:linear-gradient(135deg,#121a7e 0%,#2a45de 28%,#5f79ff 100%);
+}
+.auth-card{
+  width:100%;
+  max-width:460px;
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:28px;
+  box-shadow:0 25px 70px rgba(10,17,68,.28);
+  backdrop-filter:blur(8px);
+}
+.logo{
+  color:var(--p);
+  font-size:34px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+.tabs{
+  display:flex;
+  background:#eff3ff;
+  border-radius:12px;
+  padding:5px;
+  margin-bottom:24px;
+  border:1px solid #e0e8ff;
+}
+.tabs button{
+  width:50%;
+  padding:12px;
+  border-radius:10px;
+  font-weight:700;
+}
+.tabs button.active{
+  background:#fff;
+  color:var(--p);
+  box-shadow:0 6px 16px rgba(82,101,255,.12);
+}
+.field input,.field select,.field textarea{
+  border-radius:12px;
+  box-shadow:inset 0 1px 2px rgba(15,23,42,.02);
+}
+.primary,.btn{
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--p),var(--p2));
+  box-shadow:0 10px 22px rgba(81,97,255,.23);
+}
+.sidebar{
+  width:260px;
+  background:linear-gradient(180deg,#101a73 0%,#111c7a 100%);
+  box-shadow:14px 0 34px rgba(14,20,64,.12);
+}
+.nav button{
+  padding:13px 14px;
+  border-radius:12px;
+  font-weight:600;
+}
+.nav button:hover,.nav button.active{
+  background:rgba(255,255,255,.12);
+  color:#fff;
+}
+.userbox{
+  left:18px;
+  right:18px;
+  bottom:22px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#fff,#dfe6ff);
+  color:var(--p);
+  font-weight:800;
+}
+.main{margin-left:260px}
+.topbar{
+  height:78px;
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(226,233,248,.9);
+}
+.content{padding:28px}
+.page-title{
+  padding:18px 20px;
+  background:linear-gradient(135deg,#fff 0%,#f7f9ff 100%);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow-soft);
+}
+.page-title h1{font-size:29px;line-height:1.2}
+.stat,.panel,.note-card,.board-col{
+  background:linear-gradient(180deg,#fff 0%,#fafcff 100%);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow-soft);
+}
+.stat{position:relative;overflow:hidden}
+.stat::before{
+  content:"";
+  position:absolute;
+  inset:auto -20% -35% auto;
+  width:120px;
+  height:120px;
+  background:rgba(94,117,255,.08);
+  border-radius:50%;
+}
+.stat .icon{font-size:27px;position:relative;z-index:1}
+.stat h2{font-size:30px;position:relative;z-index:1}
+.stat p{position:relative;z-index:1}
+.check{
+  width:22px;
+  height:22px;
+  border-radius:8px;
+  background:#fff;
+  color:#fff;
+  border:2px solid #bfd0ff;
+}
+.check.done{
+  background:linear-gradient(135deg,var(--green),#1ecb8a);
+  border-color:var(--green);
+}
+.task-info strong{font-size:15px}
+.badge{padding:5px 10px;border-radius:20px;font-size:11px;font-weight:800}
+.high{background:#ffe5e7;color:#c4364d}
+.medium{background:#fff2d9;color:#a9680a}
+.low{background:#e3f9ee;color:#0d7e58}
+.quick button{
+  padding:18px 12px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:linear-gradient(180deg,#fff 0%,#f7f9ff 100%);
+  box-shadow:0 8px 18px rgba(45,62,156,.05);
+}
+.quick button:hover{border-color:#cfe0ff;background:#f9fbff}
+.day{border-radius:12px;background:#fff}
+.day.today{border:2px solid var(--p2);box-shadow:inset 0 0 0 1px rgba(93,115,255,.08)}
+.day .event{background:linear-gradient(135deg,#eaf0ff,#dfe7ff);border-radius:7px}
+.day .event.rem{background:linear-gradient(135deg,#fff2d8,#ffe2ae);color:#9b6300}
+.board-col{background:#f9fbff}
+.dropzone.over{background:linear-gradient(180deg,#eef3ff,#f7f9ff);border:1px dashed #c7d5ff}
+.drag-card{border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 18px rgba(40,55,110,.05)}
+.note-card{padding:18px}
+.note-card h3{font-size:17px}
+.note-card p{line-height:1.6}
+.reminder-item strong{font-size:15px}
+.status{padding:5px 9px;border-radius:15px;font-size:10px;font-weight:800}
+.status.on{background:#e3f9ef;color:#0b7d56}
+.status.off{background:#ffe7eb;color:#bb3d4e}
+.toast{
+  background:linear-gradient(135deg,#101b7e,#2d46df);
+  border-radius:12px;
+  box-shadow:0 18px 35px rgba(26,36,90,.2);
+}
+@media(max-width:800px){
+  .sidebar{transform:translateX(-100%);transition:.25s}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+}
+
+body.dark-mode{
+  --bg:#09111d;
+  --panel:#111b2d;
+  --text:#edf4ff;
+  --muted:#a9b7d0;
+  --border:#233553;
+  --shadow:0 18px 45px rgba(5,9,18,.5);
+  --shadow-soft:0 10px 25px rgba(10,14,25,.45);
+  background:radial-gradient(circle at top left,#0b1220 0%,#101a2b 30%,#0c1424 100%);
+  color:var(--text);
+}
+body.dark-mode #authPage{
+  background:linear-gradient(135deg,#050b16 0%,#101a2e 28%,#1a2d4f 100%);
+}
+body.dark-mode .auth-card,
+body.dark-mode .panel,
+body.dark-mode .stat,
+body.dark-mode .note-card,
+body.dark-mode .board-col,
+body.dark-mode .topbar,
+body.dark-mode .page-title,
+body.dark-mode .quick button,
+body.dark-mode .drag-card,
+body.dark-mode .day,
+body.dark-mode .field input,
+body.dark-mode .field select,
+body.dark-mode .field textarea,
+body.dark-mode .modal-card{
+  background:var(--panel);
+  color:var(--text);
+  border-color:var(--border);
+  box-shadow:var(--shadow-soft);
+}
+body.dark-mode .tabs{background:#101b2d;border-color:var(--border)}
+body.dark-mode .tabs button{color:var(--muted)}
+body.dark-mode .tabs button.active{background:#18263f;color:#fff}
+body.dark-mode .field input,
+body.dark-mode .field select,
+body.dark-mode .field textarea,
+body.dark-mode .quick button,
+body.dark-mode .iconbtn,
+body.dark-mode .close,
+body.dark-mode .toolbar input,
+body.dark-mode .toolbar select{
+  background:#0d1728;
+  color:var(--text);
+  border-color:var(--border);
+}
+body.dark-mode .sidebar{background:linear-gradient(180deg,#0a1120 0%,#121d32 100%);box-shadow:14px 0 34px rgba(9,13,25,.45)}
+body.dark-mode .nav button{color:#dfe7ff}
+body.dark-mode .nav button:hover,
+body.dark-mode .nav button.active{background:rgba(255,255,255,.08)}
+body.dark-mode .topbar{background:rgba(13,23,40,.85)}
+body.dark-mode .page-title{background:linear-gradient(135deg,#101b2d 0%,#111f35 100%)}
+body.dark-mode .empty,
+body.dark-mode .hint,
+body.dark-mode .task-info span,
+body.dark-mode .reminder-item small,
+body.dark-mode .note-meta,
+body.dark-mode .userbox small,
+body.dark-mode .auth-sub,
+body.dark-mode .demo,
+body.dark-mode .cal-head,
+body.dark-mode .page-title p,
+body.dark-mode .stat p{color:var(--muted)}
+body.dark-mode .check{background:#0e1727;border-color:#2a3d62}
+body.dark-mode .day.other{background:#0d1728;opacity:.7}
+body.dark-mode .day .event{background:linear-gradient(135deg,#1b2b49,#1d3159);color:#dfe9ff}
+body.dark-mode .day .event.rem{background:linear-gradient(135deg,#4f3a1a,#705315);color:#ffdca4}
+body.dark-mode .dropzone.over{background:linear-gradient(180deg,#131f37,#172a45);border-color:#2f496f}
+body.dark-mode .progress{background:#1b2a42}
+body.dark-mode .quick button:hover{background:#111f35}
+body.dark-mode .btn.secondary{background:#12233b;color:#edf4ff}
+body.dark-mode .btn.secondary:hover{background:#152843}
+body.dark-mode .status.on{background:#123426;color:#a9efc2}
+body.dark-mode .status.off{background:#3d1720;color:#ffc5d0}
+body.dark-mode .badge.high{background:#4a1f2a;color:#ffd5df}
+body.dark-mode .badge.medium{background:#4c3b1f;color:#ffe1aa}
+body.dark-mode .badge.low{background:#123d2e;color:#bdf5d7}
+body.dark-mode .menu,
+body.dark-mode .page-title h1,
+body.dark-mode .task-info strong,
+body.dark-mode .note-card h3,
+body.dark-mode .reminder-item strong,
+body.dark-mode .stat h2,
+body.dark-mode .panel h3,
+body.dark-mode .btn,
+body.dark-mode .primary,
+body.dark-mode .userbox strong,
+body.dark-mode .logo,
+body.dark-mode .side-logo,
+body.dark-mode .field label,
+body.dark-mode #headerTitle,
+body.dark-mode .close,
+body.dark-mode .board-col h3{color:var(--text)}
+body.dark-mode .toast{background:linear-gradient(135deg,#0e163b,#1d2d75)}
+</style>
+</head>
+<body>
+<section id="authPage"><div class="auth-card"><div class="logo">ULTIMEZ</div><div class="auth-sub">Productivity Dashboard · Phase 1 + Phase 2</div><div class="tabs"><button id="loginTab" class="active" onclick="showAuth('login')">Login</button><button id="registerTab" onclick="showAuth('register')">Register</button></div><form id="authForm"><div id="nameField" class="field hidden"><label>Full Name</label><input id="name"></div><div class="field"><label>Email</label><input id="email" type="email" required></div><div class="field"><label>Password</label><input id="password" type="password" minlength="4" required></div><button class="primary" id="authBtn">Login</button></form><div class="demo">Data is stored locally in your browser for this demo.</div></div></section>
+<section id="app"><aside class="sidebar" id="sidebar"><div class="side-logo">ULTIMEZ</div><nav class="nav"><button class="active" data-page="dashboard">📊 <span>Dashboard</span></button><button data-page="tasks">✓ <span>My Tasks</span></button><button data-page="board">↔️ <span>Task Board</span></button><button data-page="schedule">📅 <span>Calendar</span></button><button data-page="reminders">⏰ <span>Reminders</span></button><button data-page="notes">📝 <span>Notes</span></button><button data-page="profile">👤 <span>Profile</span></button></nav><div class="userbox"><span class="avatar" id="avatar">U</span><strong id="sideName">User</strong><br><small id="sideEmail">user@email.com</small></div></aside><main class="main"><header class="topbar"><button class="menu" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><strong id="headerTitle">Dashboard</strong><div style="display:flex;gap:10px;align-items:center"><button class="btn secondary" id="themeToggle" type="button">🌙 Dark</button><button class="btn secondary" onclick="logout()">Logout</button></div></header><div class="content"><div id="page"></div></div></main></section>
+<div class="modal hidden" id="taskModal"><div class="modal-card"><div class="modal-head"><h2 id="modalTitle">Create Task</h2><button class="close" onclick="closeModal()">×</button></div><form id="taskForm"><input type="hidden" id="taskId"><div class="form-grid"><div class="field full"><label>Task Title *</label><input id="taskTitle" required placeholder="e.g. Complete project report"></div><div class="field"><label>Date *</label><input id="taskDate" type="date" required></div><div class="field"><label>Time</label><input id="taskTime" type="time"></div><div class="field"><label>Priority</label><select id="taskPriority"><option>High</option><option selected>Medium</option><option>Low</option></select></div><div class="field"><label>Category</label><select id="taskCategory"><option>Work</option><option>Study</option><option>Personal</option><option>Meeting</option></select></div><div class="field"><label>Reminder</label><select id="taskReminder"><option value="none">No reminder</option><option value="10">10 minutes before</option><option value="30">30 minutes before</option><option value="60">1 hour before</option><option value="1440">1 day before</option></select></div><div class="field full"><label>Description</label><textarea id="taskDesc" rows="3" placeholder="Add notes..."></textarea></div></div><button class="primary">Save Task</button></form></div></div>
+<div class="modal hidden" id="noteModal"><div class="modal-card"><div class="modal-head"><h2 id="noteModalTitle">Create Note</h2><button class="close" onclick="closeNoteModal()">×</button></div><form id="noteForm"><input type="hidden" id="noteId"><div class="field"><label>Title *</label><input id="noteTitle" required></div><div class="field"><label>Note *</label><textarea id="noteText" rows="8" required></textarea></div><button class="primary">Save Note</button></form></div></div>
+<div id="toast" class="toast hidden"></div>
+<script>
+const KEY='ultimez_phase12_v1';let mode='login',currentUser=null,calDate=new Date(),dragId=null;
+let state=JSON.parse(localStorage.getItem(KEY)||'{"users":[],"tasks":[],"notes":[]}');
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}function today(){return new Date().toISOString().slice(0,10)}function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),2200)}function userTasks(){return state.tasks.filter(t=>t.userId===currentUser.id)}function userNotes(){return state.notes.filter(n=>n.userId===currentUser.id)}function applyTheme(theme){
+  const isDark=theme==='dark';
+  document.body.classList.toggle('dark-mode',isDark);
+  if(document.getElementById('themeToggle')){
+    document.getElementById('themeToggle').textContent=isDark?'☀️ Light':'🌙 Dark';
+  }
+  localStorage.setItem('ultimez-theme',theme);
+}
+function toggleTheme(){
+  const next=document.body.classList.contains('dark-mode')?'light':'dark';
+  applyTheme(next);
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  const saved=localStorage.getItem('ultimez-theme')||((window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light');
+  applyTheme(saved);
+  const toggle=document.getElementById('themeToggle');
+  if(toggle) toggle.addEventListener('click',toggleTheme);
+});function showAuth(type){mode=type;document.getElementById('nameField').classList.toggle('hidden',type==='login');document.getElementById('loginTab').classList.toggle('active',type==='login');document.getElementById('registerTab').classList.toggle('active',type==='register');document.getElementById('authBtn').textContent=type==='login'?'Login':'Create Account';document.getElementById('name').required=type==='register'}
+document.getElementById('authForm').onsubmit=e=>{e.preventDefault();const email=document.getElementById('email').value.trim().toLowerCase(),password=document.getElementById('password').value,name=document.getElementById('name').value.trim();if(mode==='register'){if(state.users.some(u=>u.email===email))return toast('Account already exists');currentUser={id:uid(),name:name||'User',email,password};state.users.push(currentUser);save();enterApp()}else{const u=state.users.find(x=>x.email===email&&x.password===password);if(!u)return toast('Invalid email or password');currentUser=u;enterApp()}e.target.reset()};
+function enterApp(){document.getElementById('authPage').style.display='none';document.getElementById('app').style.display='block';updateUser();render('dashboard');startReminderChecker()}function logout(){currentUser=null;document.getElementById('app').style.display='none';document.getElementById('authPage').style.display='flex';showAuth('login')}function updateUser(){const n=currentUser.name||'User';document.getElementById('sideName').textContent=n;document.getElementById('sideEmail').textContent=currentUser.email;document.getElementById('avatar').textContent=n.charAt(0).toUpperCase()}
+function render(page){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.getElementById('headerTitle').textContent={dashboard:'Dashboard',tasks:'My Tasks',board:'Task Board',schedule:'Calendar',reminders:'Reminders',notes:'Notes',profile:'Profile'}[page];document.getElementById('sidebar').classList.remove('open');({dashboard:renderDashboard,tasks:renderTasks,board:renderBoard,schedule:renderSchedule,reminders:renderReminders,notes:renderNotes,profile:renderProfile}[page])()}document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>render(b.dataset.page));
+function taskHTML(t){return `<div class="task"><button class="check ${t.done?'done':''}" onclick="toggleTask('${t.id}')">${t.done?'✓':''}</button><div class="task-info"><strong>${esc(t.title)}</strong><span>${esc(t.date)}${t.time?' · '+esc(t.time):''} · ${esc(t.category)}</span></div><span class="badge ${t.priority.toLowerCase()}">${esc(t.priority)}</span><div class="task-actions"><button class="iconbtn" onclick="openModal('${t.id}')">✏️</button><button class="iconbtn" onclick="deleteTask('${t.id}')">🗑️</button></div></div>`}
+function renderDashboard(){const ts=userTasks(),done=ts.filter(t=>t.done).length,pending=ts.length-done,up=ts.filter(t=>!t.done&&t.date>=today()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,5);document.getElementById('page').innerHTML=`<div class="page-title"><div><h1>Good day, ${esc(currentUser.name)} 👋</h1><p>Manage tasks, reminders, notes and your calendar in one place.</p></div><button class="btn" onclick="openModal()">+ New Task</button></div><div class="cards"><div class="stat"><div class="icon">📝</div><h2>${ts.length}</h2><p>Total Tasks</p></div><div class="stat"><div class="icon">⏳</div><h2>${pending}</h2><p>Pending Tasks</p></div><div class="stat"><div class="icon">✅</div><h2>${done}</h2><p>Completed</p></div><div class="stat"><div class="icon">📈</div><h2>${ts.length?Math.round(done/ts.length*100):0}%</h2><p>Completion Rate</p></div></div><div class="grid"><div><div class="panel"><h3>Upcoming Activities</h3>${up.length?up.map(taskHTML).join(''):'<div class="empty">No upcoming tasks. Create one to get started.</div>'}</div><div class="panel"><h3>Quick Actions</h3><div class="quick"><button onclick="openModal()">➕<br><strong>New Task</strong></button><button onclick="render('reminders')">⏰<br><strong>Reminders</strong></button><button onclick="openNoteModal()">📝<br><strong>New Note</strong></button></div></div></div><div><div class="panel"><h3>Progress</h3><p>${done} of ${ts.length} tasks completed</p><div class="progress"><i style="width:${ts.length?done/ts.length*100:0}%"></i></div><p class="hint">Use Task Board to drag tasks between workflow stages.</p></div><div class="panel"><h3>Phase 2 Features</h3><p class="hint">✓ Drag-and-drop organization<br>✓ Calendar view and calendar export<br>✓ Task reminders and browser notifications<br>✓ Personal notes<br>✓ Existing Phase 1 dashboard, login, tasks and profile</p></div></div></div>`}
+function renderTasks(){const ts=userTasks();document.getElementById('page').innerHTML=`<div class="page-title"><div><h1>My Tasks</h1><p>Create, edit, complete and organize your tasks.</p></div><button class="btn" onclick="openModal()">+ New Task</button></div><div class="panel"><div class="toolbar"><input id="taskSearch" placeholder="Search tasks..." oninput="filterTasks()"><select id="taskFilter" onchange="filterTasks()"><option value="all">All status</option><option value="pending">Pending</option><option value="done">Completed</option></select><select id="priorityFilter" onchange="filterTasks()"><option value="all">All priority</option><option>High</option><option>Medium</option><option>Low</option></select></div><div id="taskList">${ts.length?ts.map(taskHTML).join(''):'<div class="empty">No tasks yet.</div>'}</div></div>`}
+function filterTasks(){const q=document.getElementById('taskSearch').value.toLowerCase(),f=document.getElementById('taskFilter').value,p=document.getElementById('priorityFilter').value;const list=userTasks().filter(t=>(!q||t.title.toLowerCase().includes(q)||t.desc.toLowerCase().includes(q))&&(f==='all'||(f==='done'?t.done:!t.done))&&(p==='all'||t.priority===p));document.getElementById('taskList').innerHTML=list.length?list.map(taskHTML).join(''):'<div class="empty">No matching tasks.</div>'}
+function renderBoard(){const ts=userTasks(),groups={todo:ts.filter(t=>(t.stage|| (t.done?'done':'todo'))==='todo'),progress:ts.filter(t=>(t.stage||'todo')==='progress'),done:ts.filter(t=>(t.stage|| (t.done?'done':'todo'))==='done')};document.getElementById('page').innerHTML=`<div class="page-title"><div><h1>Task Board</h1><p>Drag and drop cards to organize your workflow.</p></div><button class="btn" onclick="openModal()">+ New Task</button></div><div class="board">${boardCol('todo','To Do',groups.todo)}${boardCol('progress','In Progress',groups.progress)}${boardCol('done','Done',groups.done)}</div>`;document.querySelectorAll('.dropzone').forEach(z=>{z.ondragover=e=>{e.preventDefault();z.classList.add('over')};z.ondragleave=()=>z.classList.remove('over');z.ondrop=e=>{e.preventDefault();z.classList.remove('over');if(!dragId)return;const t=state.tasks.find(x=>x.id===dragId);if(t&&t.userId===currentUser.id){t.stage=z.dataset.stage;t.done=z.dataset.stage==='done';save();render('board');toast('Task moved')}}})}
+function boardCol(stage,title,list){return `<div class="board-col"><h3>${title} <span style="color:var(--muted)">(${list.length})</span></h3><div class="dropzone" data-stage="${stage}">${list.length?list.map(t=>`<div class="drag-card" draggable="true" ondragstart="dragId='${t.id}'" ondragend="dragId=null"><strong>${esc(t.title)}</strong><small>${esc(t.date)}${t.time?' · '+esc(t.time):''}</small><br><span class="badge ${t.priority.toLowerCase()}">${esc(t.priority)}</span><button class="iconbtn" style="float:right" onclick="openModal('${t.id}')">✏️</button></div>`).join(''):'<div class="empty">Drop tasks here</div>'}</div></div>`}
+function renderSchedule(){const y=calDate.getFullYear(),m=calDate.getMonth(),first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),prevDays=new Date(y,m,0).getDate(),ts=userTasks();let cells=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="cal-head">${x}</div>`).join('');for(let i=0;i<first;i++){const d=prevDays-first+i+1;cells+=`<div class="day other"><strong>${d}</strong></div>`}for(let day=1;day<=days;day++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,list=ts.filter(t=>t.date===ds);cells+=`<div class="day ${ds===today()?'today':''}"><strong>${day}</strong>${list.slice(0,4).map(t=>`<span class="event ${t.reminder&&t.reminder!=='none'?'rem':''}" onclick="openModal('${t.id}')">${esc(t.title)}</span>`).join('')}</div>`}document.getElementById('page').innerHTML=`<div class="page-title"><div><h1>Calendar</h1><p>View scheduled tasks and export events to your calendar.</p></div><button class="btn" onclick="openModal()">+ New Task</button></div><div class="panel"><div class="calendar-head"><button class="btn secondary" onclick="changeMonth(-1)">← Previous</button><h3>${calDate.toLocaleString('default',{month:'long'})} ${y}</h3><button class="btn secondary" onclick="changeMonth(1)">Next →</button></div><div class="calendar">${cells}</div><div class="hint">Click an event to edit it. Use the task's calendar button in Reminders to export it.</div></div>`}
+function changeMonth(n){calDate.setMonth(calDate.getMonth()+n);render('schedule')}
+function renderReminders(){const ts=userTasks().filter(t=>t.reminder&&t.reminder!=='none').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));document.getElementById('page').innerHTML=`<div class="page-title"><div><h1>Reminders</h1><p>Set task reminders and optionally allow browser notifications.</p></div><button class="btn" onclick="requestNotifications()">🔔 Enable Notifications</button></div><div class="panel"><h3>Reminder Settings</h3><p class="hint">Notifications work while this page is open and your browser permits notifications. Reminder times are saved with each task.</p>${ts.length?ts.map(t=>`<div class="reminder-item"><div><strong>${esc(t.title)}</strong><small>${esc(t.date)}${t.time?' · '+esc(t.time):''} · ${reminderText(t.reminder)}</small></div><div><span class="status ${t.notified?'off':'on'}">${t.notified?'Triggered':'Active'}</span> <button class="iconbtn" onclick="googleCalendar('${t.id}')">📅</button> <button class="iconbtn" onclick="openModal('${t.id}')">✏️</button></div></div>`).join(''):'<div class="empty">No reminders set. Add a reminder when creating a task.</div>'}</div><div class="panel"><h3>Calendar Integration</h3><div class="integration"><button class="btn" onclick="exportICS()">Download .ics Calendar</button><button class="btn secondary" onclick="openGoogleCalendarPage()">Open Google Calendar</button></div><p class="hint">The .ics file can be imported into Google Calendar, Outlook or Apple Calendar. Individual tasks can also be opened directly in Google Calendar.</p></div>`}
+function reminderText(v){return v==='10'?'10 minutes before':v==='30'?'30 minutes before':v==='60'?'1 hour before':v==='1440'?'1 day before':'No reminder'}
+function renderNotes(){const ns=userNotes();document.getElementById('page').innerHTML=`<div class="page-title"><div><h1>Notes</h1><p>Keep personal notes alongside your productivity workflow.</p></div><button class="btn" onclick="openNoteModal()">+ New Note</button></div><div class="notes-grid">${ns.length?ns.map(n=>`<div class="note-card"><h3>${esc(n.title)}</h3><p>${esc(n.text)}</p><div class="note-meta">Updated ${new Date(n.updated).toLocaleString()} <span style="float:right"><button class="iconbtn" onclick="openNoteModal('${n.id}')">✏️</button> <button class="iconbtn" onclick="deleteNote('${n.id}')">🗑️</button></span></div></div>`).join(''):'<div class="panel empty" style="grid-column:1/-1">No notes yet. Create your first personal note.</div>'}</div>`}
+function renderProfile(){document.getElementById('page').innerHTML=`<div class="page-title"><div><h1>Profile</h1><p>Manage your account information.</p></div></div><div class="panel" style="max-width:650px"><div class="field"><label>Full Name</label><input id="profileName" value="${esc(currentUser.name)}"></div><div class="field"><label>Email</label><input value="${esc(currentUser.email)}" disabled></div><button class="btn" onclick="saveProfile()">Save Changes</button></div>`}
+function saveProfile(){const n=document.getElementById('profileName').value.trim();if(!n)return toast('Name cannot be empty');currentUser.name=n;state.users.find(x=>x.id===currentUser.id).name=n;save();updateUser();render('profile');toast('Profile updated')}
+function toggleTask(id){const t=state.tasks.find(x=>x.id===id&&x.userId===currentUser.id);if(!t)return;t.done=!t.done;t.stage=t.done?'done':(t.stage==='done'?'todo':t.stage||'todo');save();render(document.getElementById('headerTitle').textContent==='My Tasks'?'tasks':document.getElementById('headerTitle').textContent==='Task Board'?'board':'dashboard')}
+function deleteTask(id){if(!confirm('Delete this task?'))return;state.tasks=state.tasks.filter(t=>t.id!==id||t.userId!==currentUser.id);save();render('tasks');toast('Task deleted')}
+function openModal(id=null){document.getElementById('taskModal').classList.remove('hidden');document.getElementById('modalTitle').textContent=id?'Edit Task':'Create Task';document.getElementById('taskForm').reset();document.getElementById('taskId').value=id||'';document.getElementById('taskDate').value=today();document.getElementById('taskReminder').value='none';if(id){const t=state.tasks.find(x=>x.id===id&&x.userId===currentUser.id);if(!t)return;document.getElementById('taskTitle').value=t.title;document.getElementById('taskDate').value=t.date;document.getElementById('taskTime').value=t.time||'';document.getElementById('taskPriority').value=t.priority;document.getElementById('taskCategory').value=t.category;document.getElementById('taskReminder').value=t.reminder||'none';document.getElementById('taskDesc').value=t.desc||''}}
+function closeModal(){document.getElementById('taskModal').classList.add('hidden')}
+document.getElementById('taskForm').onsubmit=e=>{e.preventDefault();const id=document.getElementById('taskId').value,obj={title:document.getElementById('taskTitle').value.trim(),date:document.getElementById('taskDate').value,time:document.getElementById('taskTime').value,priority:document.getElementById('taskPriority').value,category:document.getElementById('taskCategory').value,reminder:document.getElementById('taskReminder').value,desc:document.getElementById('taskDesc').value.trim(),userId:currentUser.id};if(id){Object.assign(state.tasks.find(t=>t.id===id&&t.userId===currentUser.id),obj)}else{state.tasks.push({id:uid(),done:false,stage:'todo',notified:false,...obj})}save();closeModal();render(document.getElementById('headerTitle').textContent==='Calendar'?'schedule':document.getElementById('headerTitle').textContent==='Reminders'?'reminders':document.getElementById('headerTitle').textContent==='Task Board'?'board':document.getElementById('headerTitle').textContent==='My Tasks'?'tasks':'dashboard');toast(id?'Task updated':'Task created')};
+function openNoteModal(id=null){document.getElementById('noteModal').classList.remove('hidden');document.getElementById('noteModalTitle').textContent=id?'Edit Note':'Create Note';document.getElementById('noteForm').reset();document.getElementById('noteId').value=id||'';if(id){const n=state.notes.find(x=>x.id===id&&x.userId===currentUser.id);if(!n)return;document.getElementById('noteTitle').value=n.title;document.getElementById('noteText').value=n.text}}function closeNoteModal(){document.getElementById('noteModal').classList.add('hidden')}
+document.getElementById('noteForm').onsubmit=e=>{e.preventDefault();const id=document.getElementById('noteId').value,title=document.getElementById('noteTitle').value.trim(),textv=document.getElementById('noteText').value.trim();if(id){const n=state.notes.find(x=>x.id===id&&x.userId===currentUser.id);n.title=title;n.text=textv;n.updated=Date.now()}else state.notes.push({id:uid(),title,text:textv,updated:Date.now(),userId:currentUser.id});save();closeNoteModal();render('notes');toast(id?'Note updated':'Note created')};function deleteNote(id){if(!confirm('Delete this note?'))return;state.notes=state.notes.filter(n=>n.id!==id||n.userId!==currentUser.id);save();render('notes');toast('Note deleted')}
+function requestNotifications(){if(!('Notification'in window))return toast('Browser notifications are not supported');Notification.requestPermission().then(p=>toast(p==='granted'?'Notifications enabled':'Notifications not enabled'))}
+function startReminderChecker(){setInterval(()=>{if(!currentUser)return;const now=Date.now();state.tasks.filter(t=>t.userId===currentUser.id&&!t.done&&t.reminder&&t.reminder!=='none'&&!t.notified&&t.date&&t.time).forEach(t=>{const target=new Date(t.date+'T'+t.time).getTime()-Number(t.reminder)*60000;if(now>=target&&now<target+60000){t.notified=true;save();if('Notification'in window&&Notification.permission==='granted')new Notification('ULTIMEZ Reminder',{body:t.title});else toast('Reminder: '+t.title)}})},30000)}
+function googleCalendar(id){const t=state.tasks.find(x=>x.id===id);if(!t)return;const start=new Date(t.date+'T'+(t.time||'09:00'));const end=new Date(start.getTime()+60*60000);const fmt=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z');const url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t.title)+'&dates='+fmt(start)+'/'+fmt(end)+'&details='+encodeURIComponent(t.desc||'ULTIMEZ task')+'&location=';window.open(url,'_blank')}
+function openGoogleCalendarPage(){window.open('https://calendar.google.com/calendar/u/0/r/eventedit','_blank')}
+function exportICS(){const ts=userTasks().filter(t=>t.date);if(!ts.length)return toast('No dated tasks to export');const fmt=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z');let ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//ULTIMEZ//Productivity//EN\r\n';ts.forEach(t=>{const s=new Date(t.date+'T'+(t.time||'09:00')),e=new Date(s.getTime()+3600000);ics+='BEGIN:VEVENT\r\nUID:'+t.id+'@ultimez\r\nDTSTAMP:'+fmt(new Date())+'\r\nDTSTART:'+fmt(s)+'\r\nDTEND:'+fmt(e)+'\r\nSUMMARY:'+escapeICS(t.title)+'\r\nDESCRIPTION:'+escapeICS(t.desc||'')+'\r\nEND:VEVENT\r\n'});ics+='END:VCALENDAR\r\n';const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='ultimez-calendar.ics';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('Calendar file created')}
+function escapeICS(s){return String(s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n')}
+</script></body></html>

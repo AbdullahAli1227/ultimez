@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultimez Productivity Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#1717b8;--primary2:#3030df;--bg:#f5f7fb;--card:#fff;
+  --text:#172033;--muted:#718096;--border:#e6eaf0;
+  --green:#18a874;--orange:#f39c12;--red:#e45757;--shadow:0 8px 30px rgba(26,36,80,.08)
+}
+body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0}
+.hidden{display:none!important}
+
+/* Login */
+#authPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#10108d,#3434df)}
+.auth-card{width:100%;max-width:430px;background:#fff;border-radius:22px;padding:34px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.logo{text-align:center;color:var(--primary);font-size:32px;font-weight:900;letter-spacing:2px;margin-bottom:8px}
+.auth-sub{text-align:center;color:var(--muted);margin-bottom:28px}
+.tabs{display:flex;background:#f1f3f8;border-radius:10px;padding:4px;margin-bottom:22px}
+.tabs button{width:50%;padding:10px;border-radius:8px;background:transparent;color:var(--muted)}
+.tabs button.active{background:#fff;color:var(--primary);font-weight:700;box-shadow:0 2px 8px #ddd}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+.field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1px solid var(--border);border-radius:9px;outline:none;background:#fff}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary2);box-shadow:0 0 0 3px rgba(48,48,223,.1)}
+.primary{width:100%;padding:12px;border-radius:9px;background:var(--primary);color:white;font-weight:700}
+.primary:hover{background:var(--primary2)}
+.demo{text-align:center;color:var(--muted);font-size:12px;margin-top:13px}
+
+/* App */
+#app{display:none;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:245px;background:#10108d;color:#fff;padding:25px 15px;z-index:20}
+.side-logo{font-size:25px;font-weight:900;letter-spacing:2px;padding:0 15px 35px}
+.nav button{display:flex;align-items:center;gap:12px;width:100%;padding:13px 15px;margin:4px 0;border-radius:10px;background:transparent;color:#dfe1ff;text-align:left}
+.nav button:hover,.nav button.active{background:rgba(255,255,255,.14);color:#fff}
+.userbox{position:absolute;left:15px;right:15px;bottom:20px;border-top:1px solid rgba(255,255,255,.15);padding:17px 10px}
+.avatar{width:38px;height:38px;border-radius:50%;background:#fff;color:var(--primary);display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-right:8px}
+.userbox small{color:#cbd0ff}
+
+.main{margin-left:245px;min-height:100vh}
+.topbar{height:72px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:10}
+.menu{display:none;font-size:25px;background:none}
+.content{padding:28px;max-width:1400px;margin:auto}
+.page-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.page-title h1{font-size:27px}
+.page-title p{color:var(--muted);margin-top:5px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:22px}
+.stat{background:#fff;border-radius:15px;padding:20px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.stat .icon{font-size:25px;margin-bottom:14px}
+.stat h2{font-size:28px;margin-bottom:5px}
+.stat p{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+.panel{background:#fff;border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+.panel h3{margin-bottom:16px}
+.task{display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid var(--border)}
+.task:last-child{border-bottom:0}
+.check{width:20px;height:20px;border:2px solid #b8c0cf;border-radius:6px;display:flex;align-items:center;justify-content:center;flex:none}
+.check.done{background:var(--green);border-color:var(--green);color:white}
+.task-info{flex:1;min-width:0}
+.task-info strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.task-info span{font-size:12px;color:var(--muted)}
+.badge{padding:5px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.high{background:#ffe7e7;color:#c63838}.medium{background:#fff1d7;color:#a86900}.low{background:#e4f8ef;color:#087a51}
+.progress{height:8px;background:#edf0f5;border-radius:20px;overflow:hidden;margin-top:9px}
+.progress i{display:block;height:100%;background:var(--primary2);border-radius:20px}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.quick button{padding:14px;border:1px solid var(--border);border-radius:10px;background:#fff;text-align:left}
+.quick button:hover{border-color:var(--primary2)}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-head{text-align:center;color:var(--muted);font-size:12px;padding:7px}
+.day{min-height:72px;border:1px solid var(--border);border-radius:8px;padding:7px;font-size:12px}
+.day.today{border:2px solid var(--primary2)}
+.day .dot{display:block;margin-top:7px;background:#e9e9ff;color:var(--primary);border-radius:5px;padding:3px;font-size:10px;white-space:nowrap;overflow:hidden}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.toolbar input,.toolbar select{padding:10px;border:1px solid var(--border);border-radius:8px}
+.btn{padding:10px 14px;border-radius:8px;background:var(--primary);color:#fff;font-weight:700}
+.btn.secondary{background:#eef0ff;color:var(--primary)}
+.btn.danger{background:#ffe7e7;color:#c63838}
+.task-actions{display:flex;gap:6px}
+.iconbtn{background:#f4f5f8;border-radius:7px;padding:7px}
+.empty{text-align:center;color:var(--muted);padding:25px}
+.modal{position:fixed;inset:0;background:rgba(8,12,30,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal-card{background:#fff;width:100%;max-width:520px;border-radius:16px;padding:24px;max-height:90vh;overflow:auto}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.close{background:#f0f2f5;border-radius:50%;width:32px;height:32px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid .full{grid-column:1/-1}
+.toast{position:fixed;right:20px;bottom:20px;background:#172033;color:#fff;padding:13px 18px;border-radius:10px;z-index:100;box-shadow:var(--shadow)}
+
+@media(max-width:900px){
+ .sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}
+ .main{margin-left:0}.menu{display:block}.cards{grid-template-columns:repeat(2,1fr)}
+ .grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+ .content{padding:17px}.topbar{padding:0 17px}.cards{grid-template-columns:1fr 1fr;gap:10px}
+ .stat{padding:14px}.stat h2{font-size:23px}.quick{grid-template-columns:1fr}
+ .form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}
+ .calendar{gap:3px}.day{min-height:58px;padding:4px}
+}
+</style>
+</head>
+<body>
+
+<!-- AUTHENTICATION -->
+<section id="authPage">
+ <div class="auth-card">
+  <div class="logo">ULTIMEZ</div>
+  <div class="auth-sub">Productivity Dashboard</div>
+  <div class="tabs">
+   <button id="loginTab" class="active" onclick="showAuth('login')">Login</button>
+   <button id="registerTab" onclick="showAuth('register')">Register</button>
+  </div>
+  <form id="authForm">
+   <div id="nameField" class="field hidden"><label>Full Name</label><input id="name" required></div>
+   <div class="field"><label>Email</label><input id="email" type="email" required></div>
+   <div class="field"><label>Password</label><input id="password" type="password" minlength="4" required></div>
+   <button class="primary" id="authBtn">Login</button>
+  </form>
+  <div class="demo">Demo: register a new account, or use any account you create.</div>
+ </div>
+</section>
+
+<!-- APPLICATION -->
+<section id="app">
+ <aside class="sidebar" id="sidebar">
+  <div class="side-logo">ULTIMEZ</div>
+  <nav class="nav">
+   <button class="active" data-page="dashboard">📊 <span>Dashboard</span></button>
+   <button data-page="tasks">✓ <span>My Tasks</span></button>
+   <button data-page="schedule">📅 <span>Schedule</span></button>
+   <button data-page="profile">👤 <span>Profile</span></button>
+  </nav>
+  <div class="userbox"><span class="avatar" id="avatar">U</span><strong id="sideName">User</strong><br><small id="sideEmail">user@email.com</small></div>
+ </aside>
+
+ <main class="main">
+  <header class="topbar">
+   <button class="menu" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+   <strong id="headerTitle">Dashboard</strong>
+   <button class="btn secondary" onclick="logout()">Logout</button>
+  </header>
+  <div class="content">
+   <div id="page"></div>
+  </div>
+ </main>
+</section>
+
+<!-- TASK MODAL -->
+<div class="modal hidden" id="taskModal">
+ <div class="modal-card">
+  <div class="modal-head"><h2 id="modalTitle">Create Task</h2><button class="close" onclick="closeModal()">×</button></div>
+  <form id="taskForm">
+   <input type="hidden" id="taskId">
+   <div class="form-grid">
+    <div class="field full"><label>Task Title *</label><input id="taskTitle" required placeholder="e.g. Complete project report"></div>
+    <div class="field"><label>Date *</label><input id="taskDate" type="date" required></div>
+    <div class="field"><label>Time</label><input id="taskTime" type="time"></div>
+    <div class="field"><label>Priority</label><select id="taskPriority"><option>High</option><option selected>Medium</option><option>Low</option></select></div>
+    <div class="field"><label>Category</label><select id="taskCategory"><option>Work</option><option>Study</option><option>Personal</option><option>Meeting</option></select></div>
+    <div class="field full"><label>Description</label><textarea id="taskDesc" rows="3" placeholder="Add notes..."></textarea></div>
+   </div>
+   <button class="primary">Save Task</button>
+  </form>
+ </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script>
+const KEY='ultimez_productivity_v1';
+let mode='login', currentUser=null;
+
+const state=JSON.parse(localStorage.getItem(KEY)||'{"users":[],"tasks":[]}');
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function today(){return new Date().toISOString().slice(0,10)}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),2200)}
+
+function showAuth(type){
+ mode=type;
+ document.getElementById('nameField').classList.toggle('hidden',type==='login');
+ document.getElementById('loginTab').classList.toggle('active',type==='login');
+ document.getElementById('registerTab').classList.toggle('active',type==='register');
+ document.getElementById('authBtn').textContent=type==='login'?'Login':'Create Account';
+ document.getElementById('name').required=type==='register';
+}
+document.getElementById('authForm').onsubmit=e=>{
+ e.preventDefault();
+ const email=document.getElementById('email').value.trim().toLowerCase();
+ const password=document.getElementById('password').value;
+ const name=document.getElementById('name').value.trim();
+ if(mode==='register'){
+  if(state.users.some(u=>u.email===email)) return toast('Account already exists');
+  currentUser={id:uid(),name:name||'User',email,password};
+  state.users.push(currentUser); save(); enterApp();
+ }else{
+  const u=state.users.find(x=>x.email===email&&x.password===password);
+  if(!u)return toast('Invalid email or password');
+  currentUser=u; enterApp();
+ }
+ e.target.reset();
+};
+
+function enterApp(){
+ document.getElementById('authPage').style.display='none';
+ document.getElementById('app').style.display='block';
+ updateUser();
+ render('dashboard');
+}
+function logout(){
+ currentUser=null;
+ document.getElementById('app').style.display='none';
+ document.getElementById('authPage').style.display='flex';
+ showAuth('login');
+}
+function updateUser(){
+ const n=currentUser.name||'User';
+ document.getElementById('sideName').textContent=n;
+ document.getElementById('sideEmail').textContent=currentUser.email;
+ document.getElementById('avatar').textContent=n.charAt(0).toUpperCase();
+}
+function userTasks(){return state.tasks.filter(t=>t.userId===currentUser.id)}
+function render(page){
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+ document.getElementById('headerTitle').textContent=page.charAt(0).toUpperCase()+page.slice(1);
+ document.getElementById('sidebar').classList.remove('open');
+ ({dashboard:renderDashboard,tasks:renderTasks,schedule:renderSchedule,profile:renderProfile}[page])();
+}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>render(b.dataset.page));
+
+function renderDashboard(){
+ const ts=userTasks(), done=ts.filter(t=>t.done).length, pending=ts.length-done;
+ const upcoming=ts.filter(t=>!t.done&&t.date>=today()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,5);
+ document.getElementById('page').innerHTML=`
+ <div class="page-title"><div><h1>Good day, ${esc(currentUser.name)} 👋</h1><p>Here is your productivity overview.</p></div><button class="btn" onclick="openModal()">+ New Task</button></div>
+ <div class="cards">
+  <div class="stat"><div class="icon">📝</div><h2>${ts.length}</h2><p>Total Tasks</p></div>
+  <div class="stat"><div class="icon">⏳</div><h2>${pending}</h2><p>Pending Tasks</p></div>
+  <div class="stat"><div class="icon">✅</div><h2>${done}</h2><p>Completed</p></div>
+  <div class="stat"><div class="icon">📈</div><h2>${ts.length?Math.round(done/ts.length*100):0}%</h2><p>Completion Rate</p></div>
+ </div>
+ <div class="grid">
+  <div>
+   <div class="panel"><h3>Upcoming Activities</h3>${upcoming.length?upcoming.map(taskHTML).join(''):'<div class="empty">No upcoming tasks. Great job!</div>'}</div>
+   <div class="panel"><h3>Quick Actions</h3><div class="quick">
+    <button onclick="openModal()">➕<br><strong>Create Task</strong><br><small>Add a new activity</small></button>
+    <button onclick="render('schedule')">📅<br><strong>View Schedule</strong><br><small>Organize your time</small></button>
+    <button onclick="render('tasks')">📋<br><strong>All Tasks</strong><br><small>Manage your tasks</small></button>
+   </div></div>
+  </div>
+  <div>
+   <div class="panel"><h3>Productivity</h3><p>Overall completion</p><div class="progress"><i style="width:${ts.length?done/ts.length*100:0}%"></i></div><strong style="display:block;margin-top:10px">${done} of ${ts.length} tasks completed</strong></div>
+   <div class="panel"><h3>Today's Tasks</h3>${ts.filter(t=>t.date===today()).length?ts.filter(t=>t.date===today()).map(taskHTML).join(''):'<div class="empty">Nothing scheduled today.</div>'}</div>
+  </div>
+ </div>`;
+}
+function taskHTML(t){
+ return `<div class="task">
+  <button class="check ${t.done?'done':''}" onclick="toggleTask('${t.id}')">${t.done?'✓':''}</button>
+  <div class="task-info"><strong>${esc(t.title)}</strong><span>${esc(t.date)}${t.time?' • '+esc(t.time):''} • ${esc(t.category)}</span></div>
+  <span class="badge ${t.priority.toLowerCase()}">${esc(t.priority)}</span>
+ </div>`;
+}
+function toggleTask(id){
+ const t=state.tasks.find(x=>x.id===id); if(t){t.done=!t.done;save();render('dashboard')}
+}
+
+function renderTasks(){
+ const ts=userTasks();
+ document.getElementById('page').innerHTML=`
+ <div class="page-title"><div><h1>My Tasks</h1><p>Create, edit and track all your activities.</p></div><button class="btn" onclick="openModal()">+ New Task</button></div>
+ <div class="toolbar"><input id="search" placeholder="Search tasks..." oninput="filterTasks()"><select id="filter" onchange="filterTasks()"><option value="all">All</option><option>Pending</option><option>Completed</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+ <div class="panel"><div id="taskList">${taskRows(ts)}</div></div>`;
+}
+function taskRows(ts){
+ if(!ts.length)return '<div class="empty">No tasks found.</div>';
+ return ts.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(t=>`
+ <div class="task" data-search="${esc((t.title+' '+t.category+' '+t.priority).toLowerCase())}">
+  <button class="check ${t.done?'done':''}" onclick="toggleFromTasks('${t.id}')">${t.done?'✓':''}</button>
+  <div class="task-info"><strong>${esc(t.title)}</strong><span>${esc(t.date)}${t.time?' • '+esc(t.time):''} • ${esc(t.category)}${t.desc?' • '+esc(t.desc):''}</span></div>
+  <span class="badge ${t.priority.toLowerCase()}">${esc(t.priority)}</span>
+  <div class="task-actions"><button class="iconbtn" onclick="openModal('${t.id}')">✏️</button><button class="iconbtn" onclick="deleteTask('${t.id}')">🗑️</button></div>
+ </div>`).join('');
+}
+function filterTasks(){
+ const q=document.getElementById('search').value.toLowerCase(), f=document.getElementById('filter').value;
+ let ts=userTasks().filter(t=>(t.title+' '+t.category+' '+t.priority).toLowerCase().includes(q));
+ if(f==='Pending')ts=ts.filter(t=>!t.done); else if(f==='Completed')ts=ts.filter(t=>t.done); else if(['High','Medium','Low'].includes(f))ts=ts.filter(t=>t.priority===f);
+ document.getElementById('taskList').innerHTML=taskRows(ts);
+}
+function toggleFromTasks(id){const t=state.tasks.find(x=>x.id===id);t.done=!t.done;save();render('tasks')}
+function deleteTask(id){if(confirm('Delete this task?')){state.tasks=state.tasks.filter(t=>t.id!==id);save();render('tasks');toast('Task deleted')}}
+
+function openModal(id=null){
+ document.getElementById('taskModal').classList.remove('hidden');
+ document.getElementById('modalTitle').textContent=id?'Edit Task':'Create Task';
+ document.getElementById('taskForm').reset();
+ document.getElementById('taskId').value=id||'';
+ document.getElementById('taskDate').value=today();
+ if(id){
+  const t=state.tasks.find(x=>x.id===id);
+  document.getElementById('taskTitle').value=t.title;document.getElementById('taskDate').value=t.date;
+  document.getElementById('taskTime').value=t.time;document.getElementById('taskPriority').value=t.priority;
+  document.getElementById('taskCategory').value=t.category;document.getElementById('taskDesc').value=t.desc||'';
+ }
+}
+function closeModal(){document.getElementById('taskModal').classList.add('hidden')}
+document.getElementById('taskForm').onsubmit=e=>{
+ e.preventDefault();
+ const id=document.getElementById('taskId').value;
+ const obj={title:document.getElementById('taskTitle').value.trim(),date:document.getElementById('taskDate').value,time:document.getElementById('taskTime').value,priority:document.getElementById('taskPriority').value,category:document.getElementById('taskCategory').value,desc:document.getElementById('taskDesc').value.trim(),userId:currentUser.id};
+ if(id){Object.assign(state.tasks.find(t=>t.id===id),obj)}else{state.tasks.push({id:uid(),done:false,...obj})}
+ save();closeModal();render(document.getElementById('headerTitle').textContent.toLowerCase());toast(id?'Task updated':'Task created');
+};
+
+function renderSchedule(){
+ const d=new Date();let y=d.getFullYear(),m=d.getMonth(),first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),ts=userTasks();
+ let cells=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="cal-head">${x}</div>`).join('');
+ for(let i=0;i<first;i++)cells+='<div></div>';
+ for(let day=1;day<=days;day++){
+  const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`, list=ts.filter(t=>t.date===ds);
+  cells+=`<div class="day ${ds===today()?'today':''}"><strong>${day}</strong>${list.slice(0,3).map(t=>`<span class="dot">${esc(t.title)}</span>`).join('')}</div>`;
+ }
+ document.getElementById('page').innerHTML=`<div class="page-title"><div><h1>Schedule</h1><p>View upcoming activities on your calendar.</p></div><button class="btn" onclick="openModal()">+ New Task</button></div><div class="panel"><h3>${d.toLocaleString('default',{month:'long'})} ${y}</h3><div class="calendar">${cells}</div></div>`;
+}
+
+function renderProfile(){
+ document.getElementById('page').innerHTML=`<div class="page-title"><div><h1>Profile</h1><p>Manage your account information.</p></div></div>
+ <div class="panel" style="max-width:650px">
+  <div class="field"><label>Full Name</label><input id="profileName" value="${esc(currentUser.name)}"></div>
+  <div class="field"><label>Email</label><input value="${esc(currentUser.email)}" disabled></div>
+  <button class="btn" onclick="saveProfile()">Save Changes</button>
+ </div>`;
+}
+function saveProfile(){
+ const n=document.getElementById('profileName').value.trim();
+ if(!n)return toast('Name cannot be empty');
+ currentUser.name=n;const u=state.users.find(x=>x.id===currentUser.id);u.name=n;save();updateUser();render('profile');toast('Profile updated');
+}
+
+if(state.users.length===0){
+ /* Nothing is pre-created: first-time users can register from the screen. */
+}
+</script>
+</body>
+</html>
